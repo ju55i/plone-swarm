@@ -2,6 +2,7 @@ version: "3"
 services:
   portainer:
     image: portainer/portainer:latest
+    command: --no-auth
     ports:
       - "9000:9000"
     volumes: 
