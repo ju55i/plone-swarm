@@ -1,0 +1,60 @@
+version: "3"
+services:
+  portainer:
+    image: portainer/portainer:latest
+    ports:
+      - "9000:9000"
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role == manager
+
+  traefik:
+    image: library/traefik:latest
+    command: --docker --docker.swarmmode --docker.domain=traefik --docker.watch --web
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    networks:
+      - traefik-net
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role == manager
+
+  instance:
+    image: library/plone:latest
+    hostname: plone
+    networks:
+      - traefik-net
+      - zeo-net
+    environment:
+      - ZEO_ADDRESS=zeo:8100
+    deploy:
+      replicas: 2
+      labels:
+        docker.traefik.network: traefik-net
+        traefik.port: 8080
+        traefik.frontend.rule: Host:plone.traefik #;AddPrefix:/VirtualHostBase/http/plone.traefik:80/Plone/VirtualHostRoot
+
+  zeo:
+    hostname: zeo
+    image: library/plone:latest
+    command: zeoserver
+    networks:
+      - zeo-net
+    deploy:
+      mode: global
+
+networks:
+  traefik-net:
+    driver: overlay    
+  zeo-net:
+    driver: overlay
