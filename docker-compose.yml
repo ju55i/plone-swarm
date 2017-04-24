@@ -41,7 +41,7 @@ services:
     deploy:
       replicas: 2
       labels:
-        docker.traefik.network: traefik-net
+        traefik.docker.network: traefik-net
         traefik.port: 8080
         traefik.frontend.rule: Host:plone.traefik #;AddPrefix:/VirtualHostBase/http/plone.traefik:80/Plone/VirtualHostRoot
 
@@ -49,10 +49,15 @@ services:
     hostname: zeo
     image: library/plone:latest
     command: zeoserver
+    volumes:
+      - zeo-data:/data
     networks:
       - zeo-net
     deploy:
       mode: global
+
+volumes:
+    zeo-data:
 
 networks:
   traefik-net:
