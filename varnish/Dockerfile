@@ -1,8 +1,10 @@
 FROM centos:centos7
 
 RUN yum -y update && \
-    yum install -y https://repo.varnish-cache.org/redhat/varnish-4.1.el7.rpm epel-release && \
-    yum -y install varnish
+    yum install -y epel-release && \
+    curl -s https://packagecloud.io/install/repositories/varnishcache/varnish5/script.rpm.sh | bash && \
+    yum -y install varnish && \
+    yum clean all
 
 ADD start.sh /start.sh
 ADD default.vcl /etc/varnish/default.vcl
