@@ -1,3 +1,7 @@
 deploy:
 	docker deploy -c docker-compose.yml plone
-.PHONY: deploy
+
+build:
+	docker-compose build
+
+.PHONY: deploy build

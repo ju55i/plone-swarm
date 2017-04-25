@@ -2,7 +2,7 @@ version: "3"
 services:
   portainer:
     image: portainer/portainer:latest
-    command: --no-auth -H unix:///var/run/docker.sock
+    command: --no-auth
     ports:
       - "9000:9000"
     volumes: 
@@ -17,8 +17,6 @@ services:
     image: library/traefik:latest
     command: --docker --docker.swarmmode --docker.domain=traefik --docker.watch --web
     ports:
-      - "80:80"
-      - "443:443"
       - "8080:8080"
     networks:
       - traefik-net
@@ -43,7 +41,7 @@ services:
       labels:
         traefik.docker.network: traefik-net
         traefik.port: 8080
-        traefik.frontend.rule: Host:plone.traefik #;AddPrefix:/VirtualHostBase/http/plone.traefik:80/Plone/VirtualHostRoot
+        traefik.frontend.rule: Host:plone.traefik;AddPrefix:/VirtualHostBase/http/plone.traefik:80/Plone/VirtualHostRoot
         traefik.backend.loadbalancer.method: drr
 
   zeo:
@@ -58,9 +56,13 @@ services:
       mode: global
   
   varnish:
-    image: eeacms/varnish
+    build: varnish
+    image: varnish
+    ports:
+      - "80:80"
     environment:
       - BACKENDS=traefik
+      - BACKENDS_PORT=80
       - DNS_ENABLED=true
     networks:
       - traefik-net
@@ -69,9 +71,6 @@ services:
       placement:
         constraints:
           - node.role == manager
-      labels:
-        traefik.docker.network: traefik-net
-        traefik.port: 6081
 
 volumes:
     zeo-data:
