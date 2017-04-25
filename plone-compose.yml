@@ -1,0 +1,39 @@
+version: "3"
+services:
+  instance:
+    image: library/plone:latest
+    hostname: plone
+    networks:
+      - traefik-net
+      - zeo-net
+    environment:
+      - ZEO_ADDRESS=zeo:8100
+    deploy:
+      replicas: 2
+      labels:
+        traefik.docker.network: traefik-net
+        traefik.port: 8080
+        traefik.frontend.rule: Host:plone.traefik #;AddPrefix:/VirtualHostBase/http/plone.traefik:80/Plone/VirtualHostRoot
+        traefik.backend.loadbalancer.method: drr
+
+  zeo:
+    hostname: zeo
+    image: library/plone:latest
+    command: zeoserver
+    volumes:
+      - zeo-data:/data
+    networks:
+      - zeo-net
+    deploy:
+      mode: global
+  
+volumes:
+    zeo-data:
+
+networks:
+    traefik-net:
+      external:
+        name: traefik-net
+    zeo-net:
+      external:
+        name: zeo-net
