@@ -5,3 +5,11 @@
 
 Portainer UI: http://localhost:9000/
 Traefik UI: http://localhost:8080/
+
+With Docker 17.04 make sure the experimental features are enabled. Do the following:
+add/edit the
+/etc/docker/daemon.json
+and include:
+{
+“experimental”: true
+}
