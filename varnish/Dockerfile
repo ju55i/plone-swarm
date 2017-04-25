@@ -14,5 +14,4 @@ ENV CACHE_SIZE      64m
 ENV VARNISHD_PARAMS -p default_ttl=3600 -p default_grace=3600
 
 CMD /start.sh
-EXPOSE 80
-
+EXPOSE 80 6086

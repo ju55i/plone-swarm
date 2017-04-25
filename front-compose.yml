@@ -45,6 +45,19 @@ services:
         constraints:
           - node.role == manager
 
+  hitch:
+    build: hitch
+    image: hitch
+    ports:
+      - "443:8443"
+    networks:
+      - traefik-net
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role == manager
+    
 volumes:
     zeo-data:
 

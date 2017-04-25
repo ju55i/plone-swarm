@@ -13,7 +13,8 @@ services:
       labels:
         traefik.docker.network: traefik-net
         traefik.port: 8080
-        traefik.frontend.rule: Host:plone.traefik #;AddPrefix:/VirtualHostBase/http/plone.traefik:80/Plone/VirtualHostRoot
+        traefik.frontend.rule: Host:plone.traefik;AddPrefix:/VirtualHostBase/https/plone.traefik:443/Plone/VirtualHostRoot
+        #traefik.frontend.rule: Host:plone.traefik;AddPrefix:/VirtualHostBase/http/plone.traefik:80/Plone/VirtualHostRoot
         traefik.backend.loadbalancer.method: drr
 
   zeo:
