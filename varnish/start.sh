@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
-exec bash -c \
+exec sh -c \
   "exec varnishd -F \
   -f $VCL_CONFIG \
   -s malloc,$CACHE_SIZE \

@@ -1,10 +1,5 @@
-FROM centos:centos7
-
-RUN yum -y update && \
-    yum install -y epel-release && \
-    curl -s https://packagecloud.io/install/repositories/varnishcache/varnish5/script.rpm.sh | bash && \
-    yum -y install varnish && \
-    yum clean all
+FROM alpine
+RUN apk add varnish --update-cache && rm -f /var/cache/apk/*
 
 ADD start.sh /start.sh
 ADD default.vcl /etc/varnish/default.vcl

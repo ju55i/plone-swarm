@@ -11,6 +11,9 @@ front:
 plone:
 	docker deploy -c plone-compose.yml plone
 
+clean-front:
+	docker service rm front_varnish front_hitch
+
 all: networks build front plone
 
-.PHONY: networks build front plone
+.PHONY: networks build front plone clean-front
